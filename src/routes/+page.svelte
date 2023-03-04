@@ -2,17 +2,11 @@
 	import ChatMessage from '$lib/components/ChatMessage.svelte'
 	import type { ChatCompletionRequestMessage } from 'openai'
 	import { SSE } from 'sse.js'
-	import { chatHistory } from '$lib/chat'
 
-	let currentChat = { query: '', answer: '' }
+	let query: string = ''
+	let answer: string = ''
 	let loading = false
-	let query = ''
-	let answer = ''
 	let chatMessages: ChatCompletionRequestMessage[] = []
-	let currentResponse: ChatCompletionRequestMessage = {
-		role: 'assistant',
-		content: ''
-	}
 	let scrollToDiv: HTMLDivElement
 
 	function scrollToBottom() {
@@ -23,8 +17,7 @@
 
 	const handleSubmit = async () => {
 		loading = true
-		chatMessages.push({ role: 'user', content: query })
-		currentChat = { query, answer: '' }
+		chatMessages = [...chatMessages, { role: 'user', content: query }]
 
 		const eventSource = new SSE(`/api/chat`, {
 			headers: {
@@ -42,9 +35,8 @@
 			try {
 				loading = false
 				if (e.data === '[DONE]') {
-					chatHistory.update((ch) => [...ch, currentChat])
-					chatMessages.push({ role: 'assistant', content: answer })
-					currentChat = { query: '', answer: '' }
+					chatMessages = [...chatMessages, { role: 'assistant', content: answer }]
+					answer = ''
 					return
 				}
 
@@ -52,8 +44,6 @@
 				const [{ delta }] = completionResponse.choices
 
 				if (delta.content) {
-					currentResponse.content = (currentResponse.content ?? '') + delta.content
-					currentChat.answer = (currentChat.answer ?? '') + delta.content
 					answer = (answer ?? '') + delta.content
 				}
 			} catch (err) {
@@ -63,12 +53,12 @@
 		})
 		eventSource.stream()
 		scrollToBottom()
-		loading = true
 	}
 
 	function handleErr<T>(err: T) {
 		loading = false
 		query = ''
+		answer = ''
 		console.error(err)
 	}
 </script>
@@ -78,16 +68,13 @@
 	<div class="h-[500px] w-full bg-gray-900 rounded-md p-4 overflow-y-auto flex flex-col gap-4">
 		<div class="flex flex-col gap-2">
 			<ChatMessage type="assistant" message="Hi, I'm Axel, how can I help?" />
-			{#each $chatHistory as history}
-				<ChatMessage type="user" message={history.query} />
-				<ChatMessage type="assistant" message={history.answer} />
+			{#each chatMessages as message}
+				<ChatMessage type={message.role} message={message.content} />
 			{/each}
-			{#if currentChat.query}
-				<ChatMessage type="user" message={currentChat.query} />
-				{#if currentChat.answer}
-					<ChatMessage type="assistant" message={currentChat.answer} />
-				{/if}
+			{#if answer}
+				<ChatMessage type="assistant" message={answer} />
 			{/if}
+
 			{#if loading}
 				<ChatMessage type="assistant" message="Loading..." />
 			{/if}
