@@ -16,6 +16,7 @@
 	"devDependencies": {
 		"@playwright/test": "^1.31.2",
 		"@sveltejs/adapter-auto": "^1.0.3",
+		"@sveltejs/adapter-vercel": "^2.3.0",
 		"@sveltejs/kit": "^1.10.0",
 		"@types/common-tags": "^1.8.1",
 		"@typescript-eslint/eslint-plugin": "^5.54.0",
@@ -39,5 +40,10 @@
 		"vite": "^4.1.4",
 		"vitest": "^0.25.8"
 	},
-	"type": "module"
+	"type": "module",
+	"dependencies": {
+		"gpt3-tokenizer": "^1.1.5",
+		"openai": "^3.2.1",
+		"sse.js": "^0.6.1"
+	}
 }
