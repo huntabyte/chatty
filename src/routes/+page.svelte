@@ -77,6 +77,7 @@
 	<h1 class="text-2xl font-bold w-full text-center">Chatty</h1>
 	<div class="h-[500px] w-full bg-gray-900 rounded-md p-4 overflow-y-auto flex flex-col gap-4">
 		<div class="flex flex-col gap-2">
+			<ChatMessage type="assistant" message="Hi, I'm Axel, how can I help?" />
 			{#each $chatHistory as history}
 				<ChatMessage type="user" message={history.query} />
 				<ChatMessage type="assistant" message={history.answer} />
