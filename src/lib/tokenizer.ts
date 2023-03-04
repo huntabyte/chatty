@@ -5,7 +5,7 @@ const GPT3Tokenizer: typeof GPT3TokenizerImport =
 		? GPT3TokenizerImport
 		: (GPT3TokenizerImport as any).default
 
-export const tokenizer = new GPT3Tokenizer({ type: 'gpt3' })
+const tokenizer = new GPT3Tokenizer({ type: 'gpt3' })
 
 export function getTokens(input: string): number {
 	const tokens = tokenizer.encode(input)
