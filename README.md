@@ -1,38 +1,37 @@
-# create-svelte
+# Chatty
+This project enables you to run or deploy your own ChatGPT-like application.
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+### How it works
+This app leverages [OpenAI](https://ai.com)'s recently released ChatGPT API with `gpt-3.5-turbo` model to respond to a chain of chat messages. Users submit messages to a [SvelteKit](https://kit.svelte.dev) API Endpoint/Request Handler, which relays the messages to the ChatGPT API. The responses are then proxied back to the client via SSE to stream the response in realtime.
 
-## Creating a project
+### Built with
+- Meta-Framework: [SvelteKit](https://kit.svelte.dev)
+- Styles/Components: [TailwindCSS](https://tailwindcss.com) & [DaisyUI](https://daisyui.com)
+- Deployment: [Vercel](https://vercel.com)
 
-If you're seeing this, you've probably already done this step. Congrats!
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+## Run Locally
 
-# create a new project in my-app
-npm create svelte@latest my-app
+Clone the repository
+```sh
+git clone https://github.com/huntabyte/chatty
 ```
 
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+Create a .env file within the new directory
+```sh
+cd chatty && touch .env
+echo OPENAI_KEY=<YOUR_API_KEY_HERE> >> .env
 ```
 
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
+Install dependencies & start the dev server
+```sh
+pnpm i && pnpm run dev
 ```
 
-You can preview the production build with `npm run preview`.
+You can now access the dev server running at [localhost:5173](https://localhost:5173)
 
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+## Deploy to Vercel
+
+Commit the repository to GitHub and select it when creating a new Vercel deployment.
+
+Don't forget to set the `OPENAI_KEY` environment variable within your Vercel project settings.
