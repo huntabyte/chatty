@@ -44,6 +44,10 @@ export const POST: RequestHandler = async ({ request }) => {
 				input: reqMessages[reqMessages.length - 1].content
 			})
 		})
+		if (!moderationRes.ok) {
+			const err = await moderationRes.json()
+			throw new Error(err.error.message)
+		}
 
 		const moderationData = await moderationRes.json()
 		const [results] = moderationData.results
@@ -83,7 +87,7 @@ export const POST: RequestHandler = async ({ request }) => {
 
 		if (!chatResponse.ok) {
 			const err = await chatResponse.json()
-			throw new Error(err)
+			throw new Error(err.error.message)
 		}
 
 		return new Response(chatResponse.body, {
